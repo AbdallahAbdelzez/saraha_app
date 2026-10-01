@@ -1,0 +1,388 @@
+{
+  "info": {
+    "_postman_id": "b72bb83f-c4ea-4e19-bf74-d6faa7147ca3",
+    "name": "sarahaApp",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "57139575"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "signup",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": [
+            {
+              "name": "signup",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fullname\": \"Abdallh Abdelzez\",\r\n    \"email\": \"abdelzez@gmail.com\",\r\n    \"password\": \"1234567\",\r\n    \"gender\": 0,\r\n    \"phone\": \"0150999734756\",\r\n    \"bio\": \"sufhdkfLUId\",\r\n    \"age\": 24,\r\n    \"userName\": \"abdallh_abdelzez\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/users/signup",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "users",
+                    "signup"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "389"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"185-Vj6f+Ehp+gvVn7FMibKaIjdUJos\""
+                },
+                {
+                  "key": "date",
+                  "value": "Wed, 30 Sep 2026 19:08:56 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"msg\": \"DONE\",\n  \"data\": {\n    \"firstName\": \"Abdallh\",\n    \"lastName\": \"Abdelzez\",\n    \"email\": \"abdelzez@gmail.com\",\n    \"phone\": 150999734756,\n    \"age\": 24,\n    \"gender\": 0,\n    \"provider\": 0,\n    \"role\": 0,\n    \"userName\": \"abdallh_abdelzez\",\n    \"_id\": \"6abd5e48e136ef092bd086b0\",\n    \"createdAt\": \"2026-09-30T19:08:56.558Z\",\n    \"updatedAt\": \"2026-09-30T19:08:56.558Z\",\n    \"__v\": 0,\n    \"fullname\": \"Abdallh Abdelzez\"\n  },\n  \"status\": 201,\n  \"timstamp\": \"2026-09-30T19:08:56.575Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": [
+            {
+              "name": "login",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"identifier\": \"abdallah@gmail.come\",\r\n    \"password\": \"123456\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/users/login",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "users",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "280"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"118-GhPpyY32ngIWEA74vnBVGbtZfRA\""
+                },
+                {
+                  "key": "date",
+                  "value": "Thu, 01 Oct 2026 10:06:02 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"msg\": \"DONE\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YWJkMGMzYWU1OGJmZDM1NDYwMjQ3MzciLCJlbWFpbCI6ImFiZGFsbGFoQGdtYWlsLmNvbWUiLCJpYXQiOjE3OTA4NDkxNjJ9.HwhnCVJJzPsiAsxevq6V7YTyEu1XggkY_CaOL7Bg7_A\"\n  },\n  \"status\": 200,\n  \"timstamp\": \"2026-10-01T10:06:02.647Z\"\n}"
+            },
+            {
+              "name": "login",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YWJkMGMzYWU1OGJmZDM1NDYwMjQ3MzciLCJlbWFpbCI6ImFiZGFsbGFoQGdtYWlsLmNvbWUiLCJpYXQiOjE3OTA4NjQ5MzEsImV4cCI6MTc5MDg2NjczMX0.aVo5KRMYU4Eokm21NzATq-TgBDz4iqDWyz3A_FEbuug"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"identifier\": \"abdallah@gmail.come\",\r\n    \"password\": \"123456\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/users/login",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "users",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "533"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"215-JZsQIViB4/ihfPfBTAXtxAd74UQ\""
+                },
+                {
+                  "key": "date",
+                  "value": "Thu, 01 Oct 2026 16:48:44 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"msg\": \"DONE\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YWJkMGMzYWU1OGJmZDM1NDYwMjQ3MzciLCJlbWFpbCI6ImFiZGFsbGFoQGdtYWlsLmNvbWUiLCJpYXQiOjE3OTA4NzMzMjQsImV4cCI6MTc5MDg3NDIyNH0.Of-UKqa7HwieRgbHrIyNBNNHyZ8PB2gzBMw0I4M7iXk\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YWJkMGMzYWU1OGJmZDM1NDYwMjQ3MzciLCJlbWFpbCI6ImFiZGFsbGFoQGdtYWlsLmNvbWUiLCJpYXQiOjE3OTA4NzMzMjQsImV4cCI6MTc5MTQ3ODEyNH0.PbuNFauXRzFyZDHm4ramUzS8DQFdNOX0xJ89D8gruR4\"\n  },\n  \"status\": 200,\n  \"timstamp\": \"2026-10-01T16:48:44.404Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "refreshToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res =pm.response.json();\r\nconst accessToken = res.data.accessToken;\r\npm.environment.set(\"accessToken\",accessToken)\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{refreshToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/users/refersh-token",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "users",
+                "refersh-token"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "refreshToken",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base}}/users/refersh-token",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "users",
+                    "refersh-token"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-powered-by",
+                  "value": "Express"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "content-length",
+                  "value": "303"
+                },
+                {
+                  "key": "etag",
+                  "value": "W/\"12f-bWFW9ikEaTzLMpdSzzSFjz1gR3w\""
+                },
+                {
+                  "key": "date",
+                  "value": "Thu, 01 Oct 2026 16:49:27 GMT"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"msg\": \"DONE\",\n  \"data\": {\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YWJkMGMzYWU1OGJmZDM1NDYwMjQ3MzciLCJlbWFpbCI6ImFiZGFsbGFoQGdtYWlsLmNvbWUiLCJpYXQiOjE3OTA4NzMzNjcsImV4cCI6MTc5MDg3NTE2N30.lF8uV137MVNWhWRKqFyTVIqh_fUzPwqE3udxcDIxsYA\"\n  },\n  \"status\": 200,\n  \"timstamp\": \"2026-10-01T16:49:27.966Z\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "profil",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": [
+        {
+          "name": "profil",
+          "originalRequest": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YWJkMGMzYWU1OGJmZDM1NDYwMjQ3MzciLCJlbWFpbCI6ImFiZGFsbGFoQGdtYWlsLmNvbWUiLCJpYXQiOjE3OTA4NjQ5MzEsImV4cCI6MTc5MDg2NjczMX0.aVo5KRMYU4Eokm21NzATq-TgBDz4iqDWyz3A_FEbuug"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/users/me",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "content-length",
+              "value": "352"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"160-tjEwzNvBaCUNn9RsymTq01USVlU\""
+            },
+            {
+              "key": "date",
+              "value": "Thu, 01 Oct 2026 16:57:55 GMT"
+            },
+            {
+              "key": "connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "keep-alive",
+              "value": "timeout=5"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"msg\": \"DONE\",\n  \"data\": {\n    \"_id\": \"6abd0c3ae58bfd3546024737\",\n    \"firstName\": \"abdallah\",\n    \"lastName\": \"muhammed\",\n    \"email\": \"abdallah@gmail.come\",\n    \"provider\": 0,\n    \"role\": 0,\n    \"userName\": \"Abdallah_muhammed\",\n    \"createdAt\": \"2026-09-30T13:18:50.362Z\",\n    \"updatedAt\": \"2026-09-30T13:18:50.362Z\",\n    \"__v\": 0,\n    \"fullname\": \"abdallah muhammed\"\n  },\n  \"status\": 200,\n  \"timstamp\": \"2026-10-01T16:57:55.414Z\"\n}"
+        }
+      ]
+    }
+  ]
+}
