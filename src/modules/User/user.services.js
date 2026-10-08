@@ -1,7 +1,9 @@
 import { userModel } from "../../DB/models/user.model.js";
 import { errorRes } from "../../utls/error.res.js";
 import jwt from "jsonwebtoken";
-import {  decodeToken, tokenEnum } from "../../middlleware/auth.middleware.js"
+import { decodeToken, tokenEnum } from "../../middlleware/auth.middleware.js"
+import { compareHash, createHash } from "../../utls/scurity/hash.js";
+import { encryption } from "../../utls/scurity/encryption.js";
 
 
 export const signupServices = async ({ fullname, email, password, gender, phone, bio, age, userName }) => {
@@ -31,7 +33,7 @@ export const signupServices = async ({ fullname, email, password, gender, phone,
     }
 
     const user = await userModel.create({
-        fullname, email, password, gender, phone, bio, age, userName
+        fullname, email, password: await createHash(password), gender, phone: encryption(phone), bio, age, userName
     })
 
     return {
@@ -51,11 +53,15 @@ export const loginServices = async (identifier, password) => {
 
     if (!user) {
         errorRes({
-            msg: "invalid credential",
+            msg: "invalid credential x",
             statusCode: 400
         })
     }
-    if (user.password != password) {
+
+    const isPasswordMatch = await compareHash(password , user.password)
+
+    
+    if (!isPasswordMatch) {
         errorRes({
             msg: "invalid credential",
             statusCode: 400
@@ -64,17 +70,17 @@ export const loginServices = async (identifier, password) => {
     const accessToken = jwt.sign({
         _id: user._id,
         email: user.email
-    }, process.env.ACCESS_TOKEN_SECRET,{
-        expiresIn:"15M"
+    }, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "15M"
     })
     const refreshToken = jwt.sign({
         _id: user._id,
         email: user.email
-    }, process.env.REFRESH_TOKEN_SECRET,{
-        expiresIn:"7D"
+    }, process.env.REFRESH_TOKEN_SECRET, {
+        expiresIn: "7D"
     })
-    return{
-        data:{
+    return {
+        data: {
             accessToken,
             refreshToken
         }
@@ -82,16 +88,16 @@ export const loginServices = async (identifier, password) => {
 }
 
 
-export const refreshToken =async(authorization)=>{
-    const {user} = await decodeToken({ authorization, tokenType: tokenEnum.refresh })
-    const accessToken= jwt.sign({
-        _id:user._id,
+export const refreshToken = async (authorization) => {
+    const { user } = await decodeToken({ authorization, tokenType: tokenEnum.refresh })
+    const accessToken = jwt.sign({
+        _id: user._id,
         email: user.email
-    },process.env.ACCESS_TOKEN_SECRET,{
-        expiresIn:"30M"
+    }, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "30M"
     })
-    return{
-        data:{
+    return {
+        data: {
             accessToken
         }
     }

@@ -23,7 +23,7 @@ const bootstrape = async () => {
     app.use(userRoutes.base, userRouter)
 
 
-    
+
     // await userModel.create({
     //     fullname: "abdallah muhammed",
     //     email: "abdallah@gmail.come",
@@ -38,7 +38,8 @@ const bootstrape = async () => {
         const statusCode = err.cause?.statusCode || 500
         res.status(statusCode).json({
             arrMsg: err.message,
-            status: statusCode
+            status: statusCode,
+            errOptions: err.cause?.options
         })
     })
     app.listen(port, () => {

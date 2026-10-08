@@ -11,17 +11,14 @@ export const tokenEnum = {
 
 
 export const auth = async (req, res, next) => {
-    const { user } =await decodeToken({ authorization: req.headers.authorization })
-    console.log(user)
+    const { user } = await decodeToken({ authorization: req.headers.authorization })
+    // console.log(user)
     req.user = user
     next()
 }
 
 
 export const decodeToken = async ({ authorization, tokenType = tokenEnum.access }) => {
-    // const authorization = req.headers.authorization
-
-    // console.log(authorization)
     if (!authorization || !authorization.startsWith("Bearer")) {
         errorRes({
             msg: "in_valid token",
@@ -52,5 +49,18 @@ export const decodeToken = async ({ authorization, tokenType = tokenEnum.access 
 
     return {
         user
+    }
+}
+
+
+export const authorization = (...roules) => {
+    return (req, res, next) => {
+        if (!roules.includes(req.user.role)) {
+            errorRes({
+                msg: "un Authorized",
+                statusCode: 401
+            })
+        }
+        next()
     }
 }
