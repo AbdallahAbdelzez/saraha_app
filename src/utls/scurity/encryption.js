@@ -16,7 +16,9 @@ export const encryption = (data) => {
 
 
 export const deCryption = (encryptionedValue)=>{
+
     const [iv,cipherText] = encryptionedValue.split(":")
+
     if(!iv||!cipherText){
         errorRes({
             msg:"in_valid encryted value"

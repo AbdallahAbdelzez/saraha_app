@@ -4,7 +4,24 @@ import {
     ProviderEnum,
     RoleEnum
 } from "../../modules/User/user.types.js";
-
+import { deCryption, encryption } from "../../utls/scurity/encryption.js";
+const otpSchema = new Schema(
+    {
+        code: {
+            type: String,
+            required: true,
+        },
+        expirein: {
+            type: Date
+        }
+    }
+    , {
+        _id: false
+    }
+)
+otpSchema.index("expirein", {
+    expireAfterSeconds: 0
+})
 
 const userSchema = new Schema(
     {
@@ -23,11 +40,21 @@ const userSchema = new Schema(
         },
         password: {
             type: String,
-            required: true,
+            required: function () {
+                return this.provider == ProviderEnum.system ? true : false
+            },
         },
         phone: {
             type: String,
-            required: true,
+            set(value) {
+                return encryption(value)
+            },
+            get(value) {
+                return deCryption(value)
+            },
+            required: function () {
+                return this.provider == ProviderEnum.system ? true : false
+            },
             unique: true,
         },
         age: Number,
@@ -51,13 +78,16 @@ const userSchema = new Schema(
         boi: String,
         userName: {
             type: String,
-            required: true,
+            required: function () {
+                return this.provider == ProviderEnum.system ? true : false
+            },
             unique: true
         },
         confirmedAt: {
             type: Date
         },
-        blockedAt: Date
+        blockedAt: Date,
+        otp: otpSchema
     },
     {
         strict: true,

@@ -40,12 +40,12 @@ export const decodeToken = async ({ authorization, tokenType = tokenEnum.access 
             statusCode: 404
         })
     }
-    // if(!user.confirmedAt){
-    //     errorRes({
-    //         msg:"confirm first",
-    //         statusCode:401
-    //     })
-    // }
+    if(!user.confirmedAt){
+        errorRes({
+            msg:"confirm first",
+            statusCode:401
+        })
+    }
 
     return {
         user

@@ -3,8 +3,11 @@ import express from "express"
 import { DBconection } from "./DB/DB.connection.js"
 import { userModel } from "./DB/models/user.model.js"
 import { successRes } from "./utls/success.res.js"
-
+import cors from "cors";
 import userRouter, { routes as userRoutes } from "./modules/User/user.controller.js"
+import { sendEmail } from "./utls/email/sendEmail.js"
+import { otpConfirmationTemplate } from "./utls/email/emailTemplate.js"
+
 
 
 
@@ -12,7 +15,12 @@ import userRouter, { routes as userRoutes } from "./modules/User/user.controller
 const bootstrape = async () => {
     const app = express()
     const port = + process.env.port
+
+    app.use(cors({
+        origin: '*'
+    }))
     app.use(express.json())
+    app.use("/uploads",express.static("./uploads"))
     await DBconection()
 
     app.get("/", async (req, res) => {
@@ -20,21 +28,13 @@ const bootstrape = async () => {
         successRes({ res, data: user })
     })
 
+
     app.use(userRoutes.base, userRouter)
 
 
 
-    // await userModel.create({
-    //     fullname: "abdallah muhammed",
-    //     email: "abdallah@gmail.come",
-    //     password: "123456",
-    //     userName: "Abdallah_muhammed"
-    // })
-
-
-
-    // console.log(port)
     app.use((err, req, res, next) => {
+        console.log(err)
         const statusCode = err.cause?.statusCode || 500
         res.status(statusCode).json({
             arrMsg: err.message,
