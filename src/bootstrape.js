@@ -5,8 +5,8 @@ import { userModel } from "./DB/models/user.model.js"
 import { successRes } from "./utls/success.res.js"
 import cors from "cors";
 import userRouter, { routes as userRoutes } from "./modules/User/user.controller.js"
-import { sendEmail } from "./utls/email/sendEmail.js"
-import { otpConfirmationTemplate } from "./utls/email/emailTemplate.js"
+
+import { redisClient } from "./DB/redis.connect.js"
 
 
 
@@ -31,7 +31,7 @@ const bootstrape = async () => {
 
     app.use(userRoutes.base, userRouter)
 
-
+// redisClient
 
     app.use((err, req, res, next) => {
         console.log(err)

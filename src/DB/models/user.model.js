@@ -5,23 +5,23 @@ import {
     RoleEnum
 } from "../../modules/User/user.types.js";
 import { deCryption, encryption } from "../../utls/scurity/encryption.js";
-const otpSchema = new Schema(
-    {
-        code: {
-            type: String,
-            required: true,
-        },
-        expirein: {
-            type: Date
-        }
-    }
-    , {
-        _id: false
-    }
-)
-otpSchema.index("expirein", {
-    expireAfterSeconds: 0
-})
+// const otpSchema = new Schema(
+//     {
+//         code: {
+//             type: String,
+//             required: true,
+//         },
+//         expirein: {
+//             type: Date
+//         }
+//     }
+//     , {
+//         _id: false
+//     }
+// )
+// otpSchema.index("expirein", {
+//     expireAfterSeconds: 0
+// })
 
 const userSchema = new Schema(
     {
@@ -87,7 +87,7 @@ const userSchema = new Schema(
             type: Date
         },
         blockedAt: Date,
-        otp: otpSchema
+        // otp: otpSchema
     },
     {
         strict: true,

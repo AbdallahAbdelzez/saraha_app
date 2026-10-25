@@ -94,7 +94,7 @@ router.patch(routes.resetPass, validation(resetPassSchema), async (req, res) => 
     })
 })
 
-router.get(routes.uploadeFile, auth, uploadeFile("users").single("image"), async (req, res) => {
+router.patch(routes.uploadeFile, auth, uploadeFile("users").single("image"), async (req, res) => {
     console.log(req.body)
     console.log(req.file)
     const user = req.user
