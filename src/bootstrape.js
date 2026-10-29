@@ -7,6 +7,7 @@ import cors from "cors";
 import userRouter, { routes as userRoutes } from "./modules/User/user.controller.js"
 
 import { redisClient } from "./DB/redis.connect.js"
+import messageRouter, { routes as messageRoutes } from "./modules/Message/message.controller.js"
 
 
 
@@ -20,7 +21,7 @@ const bootstrape = async () => {
         origin: '*'
     }))
     app.use(express.json())
-    app.use("/uploads",express.static("./uploads"))
+    app.use("/uploads", express.static("./uploads"))
     await DBconection()
 
     app.get("/", async (req, res) => {
@@ -30,8 +31,9 @@ const bootstrape = async () => {
 
 
     app.use(userRoutes.base, userRouter)
+    app.use(messageRoutes.base, messageRouter)
 
-// redisClient
+    // redisClient
 
     app.use((err, req, res, next) => {
         console.log(err)

@@ -1,12 +1,12 @@
 import { Router } from "express"
 import { auth, authorization } from "../../middlleware/auth.middleware.js"
 import { validation } from "../../middlleware/validation.middleware.js"
-import { deCryption } from "../../utls/scurity/encryption.js"
+
 import { successRes } from "../../utls/success.res.js"
-import { confirmEmail, forgetPassSendOtp, googleLogin, loginServices, refreshToken, resetPassword, signupServices } from "./user.services.js"
+import { confirmEmail, forgetPassSendOtp, googleLogin, loginServices, logout, logoutFroumAllDevices, refreshToken, resentConfirmEmailOtp, resetPassword, signupServices } from "./user.services.js"
 import { RoleEnum } from "./user.types.js"
 import { loginSchema, resetPassSchema, signUpSchema } from "./user.validation.js"
-import multer from "multer"
+
 import { uploadeFile } from "../../utls/multer.js"
 
 const router = Router()
@@ -20,8 +20,11 @@ export const routes = {
     googleSignup: "/signup/gmail", //POST
     confirmEmail: "/confirm-email", //PATCH
     forgetPass: "/forget-password", //PATCH
-    resetPass: "/reset-password",//PATCH
+    resetPass: "/reset-password", //PATCH
     uploadeFile: "/uploade-file", //GET
+    logoutFroumAllDevices: "/logout-from-all-devices", //POST
+    logoutFroumOneDevice: "/logout-from-one-device", //POST
+    resentConfirmEmailOtp: "/resent-confirm-email-otp", //POST
 
 }
 
@@ -106,6 +109,39 @@ router.patch(routes.uploadeFile, auth, uploadeFile("users").single("image"), asy
         res
     })
 })
+router.post(routes.logoutFroumAllDevices, auth, async (req, res) => {
+    const userId = req.user._id
+    await logoutFroumAllDevices(userId)
+    return successRes({
+        res
+    })
+})
+router.post(routes.logoutFroumAllDevices, auth, async (req, res) => {
+    const userId = req.user._id
+    await logoutFroumAllDevices(userId)
+    return successRes({
+        res
+    })
+})
+router.post(routes.logoutFroumOneDevice, auth, async (req, res) => {
+    const userId = req.user._id
+    const jti = req.jti
+    await logout(userId, jti)
+    return successRes({
+        res
+    })
+})
+
+router.post(routes.resentConfirmEmailOtp, async (req, res) => {
+    const { email } = req.body
+    const { data } = await resentConfirmEmailOtp(email)
+    return successRes({
+        res,
+        data
+    })
+})
+
+
 export default router
 
 

@@ -7,9 +7,10 @@ import { random } from "../../utls/email/creatOtp.js";
 import { otpConfirmationTemplate } from "../../utls/email/emailTemplate.js";
 import { sendEmail } from "../../utls/email/sendEmail.js";
 import { errorRes } from "../../utls/error.res.js";
-import { attempsBlockCountKey, attempsBlockKey, attempsKey, confirmEmailKey, resendOtpKey, userPrefixKey } from "../../utls/redis-services.js";
+import { attempsBlockCountKey, attempsBlockKey, attempsKey, confirmEmailKey, resendOtpKey, userPrefixKey, userSessionJwtIdKey, userSessionJwtIdPrefixKey } from "../../utls/redis-services.js";
 import { compareHash, createHash } from "../../utls/scurity/hash.js";
 import { ProviderEnum } from "./user.types.js";
+import { nanoid } from "nanoid";
 const googlClient = new OAuth2Client()
 
 const clacBlockSecend = (count) => {
@@ -92,7 +93,8 @@ export const loginServices = async (identifier, password) => {
         $or: [
             { email: identifier },
             { userName: identifier }
-        ]
+        ],
+        confirmedAt: { $exists: true, $ne: null }
     })
 
 
@@ -112,17 +114,30 @@ export const loginServices = async (identifier, password) => {
             statusCode: 400
         })
     }
+
+    const jwtid = nanoid()
+    console.log(jwtid)
     const accessToken = jwt.sign({
         _id: user._id,
         email: user.email
     }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "30M"
+        expiresIn: "30M",
+        jwtid
     })
     const refreshToken = jwt.sign({
         _id: user._id,
         email: user.email
     }, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: "7D"
+        expiresIn: "7D",
+        jwtid
+    })
+
+
+    await redisClient.set(userSessionJwtIdKey(user._id, jwtid), jwtid, {
+        expiration: {
+            type: "EX",
+            value: 7 * 24 * 60 * 60
+        }
     })
     return {
         data: {
@@ -134,12 +149,13 @@ export const loginServices = async (identifier, password) => {
 
 
 export const refreshToken = async (authorization) => {
-    const { user } = await decodeToken({ authorization, tokenType: tokenEnum.refresh })
+    const { user, jti } = await decodeToken({ authorization, tokenType: tokenEnum.refresh })
     const accessToken = jwt.sign({
         _id: user._id,
         email: user.email
     }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "30M"
+        expiresIn: "30M",
+        jwtid: jti
     })
     return {
         data: {
@@ -194,6 +210,73 @@ export const googleLogin = async (token) => {
         statusCode
 
     }
+}
+
+export const resentConfirmEmailOtp = async (email) => {
+    const user = await userModel.findOne({
+        email,
+        confirmedAt: {
+            $exists: false
+        }
+    })
+    if (!user) {
+        errorRes({
+            msg: "user not found ",
+            statusCode: 404
+        })
+    }
+    const userId = user._id
+
+    const cannotResend = (await redisClient.get(resendOtpKey(userId))
+        || await redisClient.get(attempsBlockKey(userId)))
+
+    if (cannotResend) {
+        errorRes({
+            msg: "wait",
+            statusCode: 404
+        })
+    }
+    const attempts = await redisClient.incr(attempsKey(user._id))
+    if (attempts >= 5) {
+        const blockCount = await redisClient.incr(attempsBlockCountKey(user._id))
+        await redisClient.set(attempsBlockKey(user._id), 0, {
+            expiration: {
+                type: "EX",
+                value: clacBlockSecend(blockCount)
+            }
+        })
+
+        await redisClient.set(attempsKey(user._id), 0)
+    } else {
+        await redisClient.set(resendOtpKey(user._id), 0, {
+            expiration: {
+                type: "EX",
+                value: 60
+            }
+        })
+    }
+    const otp = random(6)
+    sendEmail({
+        to: email,
+        subject: "Confirm Your Email - Saraha App ",
+        html: otpConfirmationTemplate({
+            name: user.firstName,
+            otp
+        })
+    })
+    const redisKey = confirmEmailKey(user._id)
+    await redisClient.set(redisKey, await createHash(otp), {
+        expiration: {
+            type: "EX",
+            value: 5 * 60
+        }
+    })
+    return {
+        data: {
+
+        }
+    }
+
 }
 
 export const confirmEmail = async (email, otp) => {
@@ -257,8 +340,6 @@ export const forgetPassSendOtp = async (email) => {
     }
 }
 
-
-
 export const resetPassword = async (email, otp, password) => {
     const user = await userModel.findOne({ email })
     if (!user) {
@@ -276,8 +357,6 @@ export const resetPassword = async (email, otp, password) => {
         data: {}
     }
 }
-
-
 
 const checkOtp = async (user, otp) => {
     // if (!user.otp || user.otp.expirein < Date.now()) {
@@ -319,6 +398,7 @@ const checkOtp = async (user, otp) => {
                     value: clacBlockSecend(blockCount)
                 }
             })
+            await redisClient.set(attempsKey(user._id), 0)
             errorRes({
                 msg: `try again after ${Math.round(clacBlockSecend(blockCount) / 60)} M`,
                 statusCode: 400
@@ -332,7 +412,50 @@ const checkOtp = async (user, otp) => {
         const userKeys = await redisClient.keys(`${userPrefixKey(user._id)}*`)
         await redisClient.del(userKeys)
     }
-    
+
+}
+
+
+export const logout = async (userId, jti) => {
+    const user = await userModel.findById(userId)
+    if (!user) {
+        errorRes({
+            msg: "user not found ",
+            statusCode: 404
+        })
+    }
+    const deleteCount = await redisClient.del(userSessionJwtIdKey(userId, jti))
+    if (deleteCount < 1) {
+        errorRes({
+            msg: "already logged out"
+        })
+    }
+    return {
+        data: {
+
+        }
+    }
+}
+export const logoutFroumAllDevices = async (userId) => {
+    const user = await userModel.findById(userId)
+    if (!user) {
+        errorRes({
+            msg: "user not found ",
+            statusCode: 404
+        })
+    }
+    const sessionKey = await redisClient.keys(userSessionJwtIdPrefixKey(userId) + "*")
+    const deleteCount = await redisClient.del(sessionKey)
+    if (deleteCount < 1) {
+        errorRes({
+            msg: "already logged out"
+        })
+    }
+    return {
+        data: {
+
+        }
+    }
 }
 
 
